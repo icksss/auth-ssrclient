@@ -1,5 +1,6 @@
 package com.kr.jikim.oauth.ssrclient.config;
 
+import com.kr.jikim.oauth.ssrclient.oauth2.CustomClientRegistrationRepo;
 import com.kr.jikim.oauth.ssrclient.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomClientRegistrationRepo customClientRegistrationRepo;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -28,6 +30,7 @@ public class SecurityConfig {
         http
 //                .oauth2Login(Customizer.withDefaults());
         .oauth2Login((oauth2) -> oauth2
+                .clientRegistrationRepository(customClientRegistrationRepo.clientRegistrationRepository())
                 .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)))
                 .loginPage("/login"));
